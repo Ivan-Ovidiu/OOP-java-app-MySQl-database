@@ -17,7 +17,7 @@ public static void main(String[] args) throws SQLException {
     Customer customer = new Customer("Ovidiu Ivan", "admin@gmail.com", "+40770316652",
             "Ygvujmk0",addresses,cards,40,orders,restaurants,foods);
 
-System.out.println(restaurant.toString());
+
   // SingletonInteractiveMenu menu =  SingletonInteractiveMenu.getInstance();
   // menu.Start();
 
