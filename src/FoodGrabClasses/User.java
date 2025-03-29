@@ -1,16 +1,16 @@
 package FoodGrabClasses;
-import Statements.UserStatements;
-import Statements.UserStatements;
+import DAO.UserDAO;
+
 import java.sql.SQLException;
 
 public class User {
     static Integer generateduserId ;
     protected Integer userId;
-    String name;
-    String email;
-    String phoneNumber;
-    String password;
-    String userType ;
+    protected String name;
+    protected String email;
+    protected String phoneNumber;
+    protected String password;
+    protected String userType ;
 
     //Getters
     public int getUserId() {return userId;}
@@ -29,7 +29,7 @@ public class User {
         userType="user";
     }
     public User(String _name, String _email, String _phoneNumber, String _password) throws SQLException {
-        UserStatements userStatements = new UserStatements();
+        UserDAO userStatements = new UserDAO();
         generateduserId = userStatements.getLastUserId() + 1;
         userId = generateduserId;
         name = _name;

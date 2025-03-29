@@ -1,24 +1,28 @@
-package Statements;
+package DAO;
 import FoodGrabClasses.User;
 import Connections.ConnectionClass;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserStatements extends ConnectionClass {
+public class UserDAO extends ConnectionClass {
 
     private PreparedStatement insertUser;
     private PreparedStatement lastLine;
+    private PreparedStatement selectUserInfo1;
     private PreparedStatement selectUserInfo;
+
     private PreparedStatement selectSearchName;
 
 //Default Constructor ( Whenever an UserStatement is created the function prepareSattements is being called )
-    public UserStatements() throws SQLException {
+    public UserDAO() throws SQLException {
     }
+
+
 
     {
         //retrieve info from database
-        selectUserInfo = c.prepareStatement("SELECT user_id,name,email,phoneNumber,password FROM users WHERE user_id=?");
+        selectUserInfo1 = c.prepareStatement("SELECT user_id,name,email,phoneNumber,password FROM users WHERE user_id=?");
         lastLine= c.prepareStatement("select user_id from Users order by user_id desc limit 1;"); // select last id from the table user
         selectUserInfo = c.prepareStatement("SELECT COUNT(*) FROM users WHERE name=?");
         //insert info into the database
@@ -36,8 +40,8 @@ public class UserStatements extends ConnectionClass {
 
     //Retrieving all the base information for a use from the database
     public User getUserInfo(int user_id) throws SQLException {
-        selectUserInfo.setInt(1, user_id);
-        ResultSet rs = selectUserInfo.executeQuery();
+        selectUserInfo1.setInt(1, user_id);
+        ResultSet rs = selectUserInfo1.executeQuery();
 
         if(rs.next()) {
             User user = new User(rs.getString("name"),rs.getString("email"),rs.getString("phoneNumber"),rs.getString("password"));

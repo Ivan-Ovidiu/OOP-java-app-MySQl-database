@@ -1,10 +1,10 @@
 package FoodGrabClasses;
 
 public class Food {
-        static Integer foodId;
-        double grams;
-        double price;
-        String name;
+    private static Integer foodId;
+    private double grams;
+    private double price;
+    private String name;
 
  //Cosntructors
 

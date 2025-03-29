@@ -1,20 +1,19 @@
-package Statements;
+package DAO;
 
-import java.util.Scanner;
 import Connections.ConnectionClass;
 import FoodGrabClasses.Restaurant;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class RestaurantStatement extends ConnectionClass {
+public class RestaurantDAO extends ConnectionClass {
 
 
    private PreparedStatement insertRestaurant;
    private PreparedStatement lastLine;
 
 //Constructor
-public RestaurantStatement() throws SQLException {}
+public RestaurantDAO() throws SQLException {}
 
     {
         insertRestaurant = c.prepareStatement("INSERT INTO Restaurants VALUES (?,?,?,?)");

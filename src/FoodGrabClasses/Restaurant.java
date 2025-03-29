@@ -1,16 +1,13 @@
 package FoodGrabClasses;
-import Statements.RestaurantStatement;
+import DAO.RestaurantDAO;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class Restaurant {
-    static Integer generatedRestaurantId;
-    Integer restaurantId;
-    Address address;
-    String name;
-    double deliveryPrice;
+    private static Integer generatedRestaurantId;
+    private Integer restaurantId;
+    private Address address;
+    private String name;
+    private  double deliveryPrice;
 
 //Constructors
     public Restaurant() {
@@ -22,7 +19,7 @@ public class Restaurant {
     public Restaurant(String _city, String _street, int _number, String _name,
                       double _deliveryPrice) throws SQLException {
 
-        RestaurantStatement restaurantStatement = new RestaurantStatement();
+        RestaurantDAO restaurantStatement = new RestaurantDAO();
         address = new Address(_city, _street, _number,"Restaurant");
         restaurantId = restaurantStatement.getLastRestaurantId();
         name = _name;

@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
-    static Integer orderId;
-    String date;
-    List<Food> savedFoods;
-    double price;
-    String deliveryStatus;
+    private static Integer orderId;
+    private String date;
+    private  List<Food> savedFoods;
+    private double price;
+    private String deliveryStatus;
 
 //Constructors
     public Order(){}

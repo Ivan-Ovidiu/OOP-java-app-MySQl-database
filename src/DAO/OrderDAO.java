@@ -1,4 +1,4 @@
-package Statements;
+package DAO;
 
 import Connections.ConnectionClass;
 import FoodGrabClasses.Order;
@@ -8,12 +8,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
-public class OrderStatement extends ConnectionClass {
+public class OrderDAO extends ConnectionClass {
 
-public OrderStatement()throws SQLException {}
+public OrderDAO()throws SQLException {}
 
     private PreparedStatement selectLastId;
     private PreparedStatement insertOrder;
@@ -25,14 +27,16 @@ public OrderStatement()throws SQLException {}
         verifyFoodExistence = c.prepareStatement("SELECT food_id FROM Foods WHERE name = ?");
         insertOrder = c.prepareStatement("INSERT INTO Orders VALUES (?,?,?,?,?)");
         insertOrderFood = c.prepareStatement("INSERT INTO foodorder VALUES (?,?)");
-        selectAllFood =  c.prepareStatement(
-                "SELECT f.food_id,f.grams,f.name,f.price FROM Foodorder fo " +
-                     "JOIN Foods f ON fo.food_id = f.food_id " +
-                     "WHERE order_id = ?"
-        );
+
     }
 
-    public List<Food> getAllFood(Integer orderId) throws SQLException {
+
+//Get all the food asigned to an order from the database
+    public List<Food> getAllFood(int orderId) throws SQLException {
+        selectAllFood =  c.prepareStatement(
+                 "SELECT f.food_id,f.grams,f.name,f.price FROM Foodorder fo " +
+                     "JOIN Foods f ON fo.food_id = f.food_id " +
+                     "WHERE order_id = ?");
         selectAllFood.setInt(1, orderId);
         ResultSet rs = selectAllFood.executeQuery();
         List<Food> foods = new ArrayList<>();
@@ -44,6 +48,9 @@ public OrderStatement()throws SQLException {}
         }
         return foods;
     }
+
+
+
 
     public int getLastOrderId() throws SQLException {
         ResultSet rs = selectLastId.executeQuery();

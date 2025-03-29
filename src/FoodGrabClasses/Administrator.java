@@ -4,6 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 public class Administrator {
-    List<String> actionLog;
-    Set<String> permissions;
+    private List<String> actionLog;
+    private Set<String> permissions;
 }

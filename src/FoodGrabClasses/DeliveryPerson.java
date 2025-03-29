@@ -3,11 +3,11 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class DeliveryPerson extends User {
-    Integer deliveryPersonId;
-    String vehicle;
-    String currentLocation;
-    List<Customer> deliveryHistory;
-    double earnings;
+    private Integer deliveryPersonId;
+    private String vehicle;
+    private String currentLocation;
+    private List<Customer> deliveryHistory;
+    private double earnings;
 
 
 

@@ -29,4 +29,5 @@ public String getAddressType() {return addressType;}
 
         return city + " " + street + " " + number;
     }
+
 }
