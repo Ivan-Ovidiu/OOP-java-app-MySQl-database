@@ -9,8 +9,9 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
 
-public class CustomerDAO extends UserDAO {
-
+public class CustomerDAO extends UserDAO<Customer> {
+    private PreparedStatement insertCustomerInfo;
+    private PreparedStatement insertOrderHistory;
     private PreparedStatement insertUser;
     private PreparedStatement insertfavouriteRestaurant;
     private PreparedStatement verifyItemExistence;
@@ -22,6 +23,7 @@ public class CustomerDAO extends UserDAO {
     private PreparedStatement selectAddresses;
     private PreparedStatement selectCards;
     private PreparedStatement selectSelectedItems;
+    private PreparedStatement selectCustomerProfile;
 
 
 //Default constructor
@@ -181,6 +183,32 @@ public class CustomerDAO extends UserDAO {
             }
         }
     }
+    public void addOrderHistory(Customer customer) throws SQLException {
+        insertOrderHistory =c.prepareStatement("INSERT INTO ORDERS VALUES (?,?,?,?,?)");
+        for(Order order : customer.getOrdersHistory())
+        {
+
+        }
+    }
+
+    @Override
+    public void add(Customer customer) throws SQLException{
+        super.add(customer);
+
+        // Retrieve the last inserted user ID (as it's auto-incremented)
+        int userId = getLastUserId();
+        customer.setUserId(userId); // Set the user ID for the customer
+
+        // Now insert customer-specific details
+        insertCustomerInfo = c.prepareStatement("INSERT INTO Customers VALUES (?, ?)");
+        insertCustomerInfo.setInt(1, userId);
+        insertCustomerInfo.setDouble(2, customer.getLoyaltyPoints());
+        insertCustomerInfo.executeUpdate();
+
+    }
+
+
+
 
 
 }

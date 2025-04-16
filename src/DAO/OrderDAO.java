@@ -3,33 +3,28 @@ package DAO;
 import Connections.ConnectionClass;
 import FoodGrabClasses.Order;
 import FoodGrabClasses.Food;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class OrderDAO extends ConnectionClass {
 
-public OrderDAO()throws SQLException {}
-
+    private Connection c;
     private PreparedStatement selectLastId;
     private PreparedStatement insertOrder;
     private PreparedStatement verifyFoodExistence;
     private PreparedStatement insertOrderFood;
     private PreparedStatement selectAllFood;
-    {
-        selectLastId = c.prepareStatement("select order_id from Orders order by order_id desc limit 1;");
-        verifyFoodExistence = c.prepareStatement("SELECT food_id FROM Foods WHERE name = ?");
-        insertOrder = c.prepareStatement("INSERT INTO Orders VALUES (?,?,?,?,?)");
-        insertOrderFood = c.prepareStatement("INSERT INTO foodorder VALUES (?,?)");
 
+    public OrderDAO()throws SQLException {
+        c = ConnectionClass.getConnection();
     }
-
 
 //Get all the food asigned to an order from the database
     public List<Food> getAllFood(int orderId) throws SQLException {
@@ -53,6 +48,7 @@ public OrderDAO()throws SQLException {}
 
 
     public int getLastOrderId() throws SQLException {
+        selectLastId = c.prepareStatement("select order_id from Orders order by order_id desc limit 1;");
         ResultSet rs = selectLastId.executeQuery();
         if(rs.next()){
             return rs.getInt(1);
@@ -61,6 +57,8 @@ public OrderDAO()throws SQLException {}
     }
 
     public Integer verifyFoodExistence(String nume) throws SQLException {
+        verifyFoodExistence = c.prepareStatement("SELECT food_id FROM Foods WHERE name = ?");
+
         verifyFoodExistence.setString(1, nume);
         ResultSet rs = verifyFoodExistence.executeQuery();
         if(rs.next()){
@@ -70,7 +68,9 @@ public OrderDAO()throws SQLException {}
     }
 
     public void addToDataBaseFoodOrder(Order order) throws SQLException {
-            for(Food food : order.getSavedFoods()) {
+        insertOrderFood = c.prepareStatement("INSERT INTO foodorder VALUES (?,?)");
+
+        for(Food food : order.getSavedFoods()) {
                 Integer foodId = verifyFoodExistence(food.getName());
                 if(foodId != 0){
                     insertOrderFood.setInt(1, order.getOrderId());
@@ -81,7 +81,9 @@ public OrderDAO()throws SQLException {}
             }
     }
 
-    public void addToDataBase(Order order,Integer customerId) throws SQLException {
+    public void addToDataBase(Order order,int customerId) throws SQLException {
+        insertOrder = c.prepareStatement("INSERT INTO Orders VALUES (?,?,?,?,?)");
+
         int orderId = order.getOrderId();
         insertOrder.setInt(1, orderId);
         insertOrder.setInt(2,customerId);

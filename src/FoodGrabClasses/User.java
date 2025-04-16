@@ -23,21 +23,26 @@ public class User {
     //Setters
     public void setUserId(int _userId) {userId = _userId;}
     public void setGeneratedUserId(int _generatedUserId) {generateduserId = _generatedUserId;}
+    public void setName(String name) {this.name = name;}
+    public void setEmail(String email) {this.email = email;}
+    public void setPhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
+    public void setPassword(String password) {this.password = password;}
+    public void setUserType(String userType) {this.userType = userType;}
 
     //Constructors
     public User(){
         userType="user";
     }
-    public User(String _name, String _email, String _phoneNumber, String _password) throws SQLException {
+    public User(int _id,String _name, String _email, String _phoneNumber, String _password) throws SQLException {
         UserDAO userStatements = new UserDAO();
         generateduserId = userStatements.getLastUserId() + 1;
-        userId = generateduserId;
+        userId = _id;
         name = _name;
         email = _email;
         phoneNumber = _phoneNumber;
         password = _password;
     if(!userStatements.verifyingUserExistence(_name))
-        userStatements.addToDataBase(this);
+        userStatements.add(this);
     }
 
 

@@ -11,8 +11,8 @@ public class DeliveryPerson extends User {
 
 
 
-    public DeliveryPerson(String _name, String _email, String _phoneNumber, String _password) throws SQLException {
-        super(_name, _email, _phoneNumber, _password);
+    public DeliveryPerson(int _id,String _name, String _email, String _phoneNumber, String _password) throws SQLException {
+        super(_id,_name, _email, _phoneNumber, _password);
         deliveryPersonId = userId;
         userType = "deliveryPerson";
     }

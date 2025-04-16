@@ -11,11 +11,10 @@ public class ConnectionClass {
     protected static String connectionUser = "root";
     protected static String connectionPassword = "Ygvujmk0";
 
-    {
-        c = DriverManager.getConnection(connectionURL, connectionUser, connectionPassword);
-    }
-    protected ConnectionClass() throws SQLException {
-       c = DriverManager.getConnection(connectionURL, connectionUser, connectionPassword);
-    }
+
+ //Getter
+  public static Connection getConnection() throws SQLException {
+      return DriverManager.getConnection(connectionURL, connectionUser, connectionPassword);
+  }
 
 }
