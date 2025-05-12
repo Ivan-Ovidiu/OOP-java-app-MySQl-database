@@ -1,10 +1,5 @@
 package Menu;
-
-import DAO.CustomerDAO;
-import FoodGrabClasses.Customer;
 import Services.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -51,27 +46,55 @@ public class SingletonInteractiveMenu {
                     System.out.println("Invalid choice");
             }
             while (true) {
-                System.out.println("Select an option" +
-                        "\n1)Edit profile" +
-                        "\n2) Exit");
-
-                String choice2 = scanner.nextLine();
-                switch (choice2) {
+                System.out.println("   ___               _                   _     \n" +
+                        "  / __\\__   ___   __| |   __ _ _ __ __ _| |__  \n" +
+                        " / _\\/ _ \\ / _ \\ / _` |  / _` | '__/ _` | '_ \\ \n" +
+                        "/ / | (_) | (_) | (_| | | (_| | | | (_| | |_) |\n" +
+                        "\\/   \\___/ \\___/ \\__,_|  \\__, |_|  \\__,_|_.__/ \n" +
+                        "                         |___/                 ");
+                System.out.println("1)Manage customers" +
+                                   "\n2)Manage restaurants" +
+                                   "\n3)Manage Couriers ");
+                String choice = scanner.nextLine();
+                switch(choice) {
                     case "1":
-                       customerService.displayProfile(scanner);
-                       break;
-                    case "2":
-                        break;
-                    default:
-                        System.out.println("Invalid choice");
+                    while (true) {
+                        System.out.println("Select an option" +
+                                "\n1)Edit profile" +
+                                "\n2)Delete customer" +
+                                "\n3)Display sorted food by id" +
+                                "\n4)Display favourite restaurants" +
+                                "\n5)Display all loyalty points" +
+                                "\n6)Display total costs of an order of a customer" +
+                                "\n7)Exit");
+
+                        String choice2 = scanner.nextLine();
+                        switch (choice2) {
+                            case "1":
+                                customerService.editProfile(scanner);
+                                break;
+                            case "2":
+                                customerService.deleteCustomer(scanner);
+                                break;
+                            case "3":
+                                customerService.displayFoodList(scanner);
+                            case "4":
+                                customerService.displayAllFavouriteRestaurants(scanner);
+                                break;
+                            case "5":
+                                customerService.displayAllLoyaltyPoints();
+                                break;
+                            case "6":
+                                customerService.displayAllOrderCost(scanner);
+                                break;
+                            case "7":
+                                continue;
+                            default:
+                                System.out.println("Invalid choice");
+                        }
+                    }
                 }
-
-
             }
         }
-
-
-
     }
-
 }

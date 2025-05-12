@@ -16,6 +16,7 @@ public class UserDAO<T extends User> implements InterfaceDAO<T> {
     private PreparedStatement lastLine;
     private PreparedStatement selectUserInfo1;
     private PreparedStatement selectUserInfo;
+    private PreparedStatement deleteUser;
 
 //Default Constructor
     public UserDAO() throws SQLException { c = ConnectionClass.getConnection();}
@@ -102,6 +103,12 @@ public void insertInUser(User user) throws SQLException {
     insertUser.setInt(5, user.getUserId());
     System.out.println(user.getUserId());
     insertUser.executeUpdate();
+}
+
+public void delete(int id) throws SQLException {
+        deleteUser = c.prepareStatement("DELETE FROM users WHERE user_id=?");
+        deleteUser.setInt(1, id);
+        deleteUser.executeUpdate();
 }
 
 

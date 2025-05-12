@@ -4,9 +4,7 @@ import FoodGrabClasses.*;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CustomerDAOServices {
     private CustomerDAO customerDAO;
@@ -115,5 +113,45 @@ public class CustomerDAOServices {
     public void editCustomer(Customer customer) throws SQLException {
         if(customer != null)
             userDAO.insertInUser(customer);
+    }
+
+    public void deleteCustomer(int id) throws SQLException {
+        customerDAO.delete(id);
+    }
+
+    public List<Map.Entry<Food, Integer>> sortFoodByPrice(int customer_id) throws SQLException {
+        Map<Food, Integer> food = customerDAO.getAllSelectedItems(customer_id);
+
+        List<Map.Entry<Food, Integer>> sortedFood= new ArrayList<>(food.entrySet());
+
+        sortedFood.sort(Map.Entry.comparingByValue());
+
+
+        return sortedFood;
+    }
+
+    public double allOrderPrices (int customer_id) throws SQLException {
+       return customerDAO.getAllOrdersPrice(customer_id);
+    }
+
+    public String getAllFavouriteRestaurants(int customer_id) throws SQLException {
+        Set<Restaurant> restaurants = customerDAO.getAllFavouriteRestaurants(customer_id);
+        String result = "";
+        for (Restaurant r : restaurants) {
+            result += r.getName() + "\n";
+        }
+        return result;
+    }
+
+    public double getAllLoyaltyPoints() throws SQLException {
+        List<Integer> customerIds = customerDAO.getCustomerId();
+
+         int loyaltyPointsMap = 0;
+
+        for (Integer customerId : customerIds) {
+            int loyaltyPoints = customerDAO.getLoyaltyPoints(customerId);
+            loyaltyPointsMap+=loyaltyPoints;
+        }
+        return loyaltyPointsMap;
     }
 }

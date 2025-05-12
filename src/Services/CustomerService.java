@@ -1,6 +1,4 @@
 package Services;
-import DAO.CustomerDAO;
-import DAO.CustomerDAO;
 import DAO.UserDAO;
 import DAOServices.CustomerDAOServices;
 import FoodGrabClasses.*;
@@ -8,7 +6,6 @@ import FoodGrabClasses.*;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Scanner;
 
 public class CustomerService {
@@ -39,7 +36,6 @@ public class CustomerService {
         customer.setPassword(password);
         customer.setPhoneNumber(phone);
         customerDAOservices.createCustomer(customer);
-
     }
 
     public boolean loginUser(Scanner scanner) throws SQLException {
@@ -59,7 +55,7 @@ public class CustomerService {
     }
 
 
-    public void displayProfile(Scanner scanner) throws SQLException {
+    public void editProfile(Scanner scanner) throws SQLException {
         System.out.println("All available customer Ids:");
         System.out.println(customerDAOservices.getAllExistingIds());
 
@@ -104,10 +100,53 @@ public class CustomerService {
                     System.out.println("Invalid choice, try again.");
             }
             customerDAOservices.editCustomer(customer);
-
         }
-
     }
 
+    public void deleteCustomer(Scanner scanner) throws SQLException {
+        System.out.println("All available customer Ids:");
+        System.out.println(customerDAOservices.getAllExistingIds());
+        System.out.println("Enter the customer's id you want to delete: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        customerDAOservices.deleteCustomer(id);
+        System.out.println("Customer deleted successfully");
+    }
+
+    public void displayFoodList(Scanner scanner) throws SQLException {
+        System.out.println("All available customer Ids:");
+        System.out.println(customerDAOservices.getAllExistingIds());
+
+        int id = scanner.nextInt();
+        scanner.nextLine();
+        List<Map.Entry<Food, Integer>> sortedFood = customerDAOservices.sortFoodByPrice(id);
+        for (Map.Entry<Food, Integer> entry : sortedFood) {
+            System.out.println(entry.getKey().getName() + " => " + entry.getValue());
+        }
+    }
+
+    public void displayAllOrderCost(Scanner scanner) throws SQLException {
+        System.out.println("All available customer Ids:");
+        System.out.println(customerDAOservices.getAllExistingIds());
+
+        int id = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println(customerDAOservices.allOrderPrices(id));
+    }
+
+    public void displayAllFavouriteRestaurants(Scanner scanner) throws SQLException {
+        System.out.println("All available customer Ids:");
+        System.out.println(customerDAOservices.getAllExistingIds());
+
+        int id = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println(customerDAOservices.getAllFavouriteRestaurants(id));
+    }
+
+    public void displayAllLoyaltyPoints() throws SQLException {
+        System.out.println("All available customer Ids:");
+        System.out.println(customerDAOservices.getAllLoyaltyPoints());
+    }
 
 }

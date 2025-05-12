@@ -24,6 +24,8 @@ public class CustomerDAO extends UserDAO<Customer> {
     private PreparedStatement selectCards;
     private PreparedStatement selectSelectedItems;
     private PreparedStatement selectCustomerProfile;
+    private PreparedStatement deleteCustomer;
+    private PreparedStatement selectPrices;
 
 
 //Default constructor
@@ -195,17 +197,49 @@ public class CustomerDAO extends UserDAO<Customer> {
     public void add(Customer customer) throws SQLException{
         super.add(customer);
 
-        // Retrieve the last inserted user ID (as it's auto-incremented)
+        // Retrieving the last inserted user ID
         int userId = getLastUserId();
-        customer.setUserId(userId); // Set the user ID for the customer
+        customer.setUserId(userId); // Setting the user ID for the customer
 
-        // Now insert customer-specific details
+        //insert customer details
         insertCustomerInfo = c.prepareStatement("INSERT INTO Customers VALUES (?, ?)");
         insertCustomerInfo.setInt(1, userId);
         insertCustomerInfo.setDouble(2, customer.getLoyaltyPoints());
         insertCustomerInfo.executeUpdate();
 
     }
+
+    @Override
+    public void delete(int id) throws SQLException {
+        super.delete(id);
+
+            deleteCustomer = c.prepareStatement("DELETE FROM customers WHERE customer_id = ?");
+            deleteCustomer.setInt(1, id);
+            deleteCustomer.executeUpdate();
+            deleteCustomer = c.prepareStatement("DELETE FROM favouriterestaurants WHERE customer_id = ?");
+            deleteCustomer.setInt(1, id);
+            deleteCustomer.executeUpdate();
+            deleteCustomer = c.prepareStatement("DELETE FROM orders WHERE customer_id = ?");
+            deleteCustomer.setInt(1, id);
+            deleteCustomer.executeUpdate();
+            deleteCustomer = c.prepareStatement("DELETE FROM cards WHERE customer_id = ?");
+            deleteCustomer.setInt(1, id);
+            deleteCustomer.executeUpdate();
+            deleteCustomer = c.prepareStatement("DELETE FROM addresses WHERE customer_id = ?");
+            deleteCustomer.setInt(1, id);
+            deleteCustomer.executeUpdate();
+    }
+
+    public double getAllOrdersPrice (int customer_id) throws SQLException {
+       selectPrices = c.prepareStatement("SELECT sum(price) FROM orders WHERE customer_id = ?");
+       selectPrices.setInt(1, customer_id);
+       ResultSet rs = selectPrices.executeQuery();
+       if(rs.next()) {
+           return rs.getDouble(1);
+       }
+       return 0;
+    }
+
 
 
 
