@@ -10,4 +10,15 @@ public class Card {
     cvv = _cvv;
     expire_date = _expire_date;
     }
+
+    public String getExpireDate(){
+        return expire_date;
+    }
+    public int getCardCVV(){
+        return cvv;
+    }
+    public String getGetCardNumber(){
+        return number;
+    }
+    public void setNumber(String _number){number = _number;}
 }

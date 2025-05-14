@@ -11,7 +11,7 @@ public class FoodDAO extends UserDAO{
     public FoodDAO() throws SQLException{}
 
     //Getting all the info from the databaase for a food item
-    public Food getFoodInfo(int food_id) throws SQLException {
+    public Food getFoodInfo(int food_id) {
 
         try{
             selectFoodInfo = c.prepareStatement("SELECT * FROM Foods WHERE food_id = ?");

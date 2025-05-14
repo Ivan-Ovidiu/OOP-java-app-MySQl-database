@@ -13,6 +13,7 @@ public class RestaurantDAO extends ConnectionClass {
     private Connection c;
    private PreparedStatement insertRestaurant;
    private PreparedStatement lastLine;
+   private PreparedStatement statement;
 
 //Constructor
 public RestaurantDAO() throws SQLException {

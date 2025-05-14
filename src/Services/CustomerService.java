@@ -1,19 +1,22 @@
 package Services;
+import DAO.CustomerDAO;
 import DAO.UserDAO;
 import DAOServices.CustomerDAOServices;
 import FoodGrabClasses.*;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class CustomerService {
     private CustomerDAOServices customerDAOservices;
     UserDAO userDAO ;
-    public CustomerService() throws SQLException {
-        customerDAOservices = new CustomerDAOServices();
-        userDAO = new UserDAO();
+    CustomerDAO customerDAO ;
+    public CustomerService() {
+        try {
+            customerDAOservices = new CustomerDAOServices();
+            userDAO = new UserDAO();
+            customerDAO = new CustomerDAO();
+        }catch (Exception e) {e.printStackTrace();}
     }
 
 
@@ -53,54 +56,116 @@ public class CustomerService {
             return false;
         }
     }
+    public void displayProfile(int id) throws Exception {
+        // Retrieve user info
+        String _name = userDAO.getUserInfo(id).getName();
+        String _email = userDAO.getUserInfo(id).getEmail();
+        String _phoneNumber = userDAO.getUserInfo(id).getPhoneNumber();
+        Integer _loyaltyPoints = customerDAO.getLoyaltyPoints(id);
+        List<Order> _orderHistory = customerDAO.getAllOrders(id);
+        Set<Restaurant> _favouriteRestaurants = customerDAO.getAllFavouriteRestaurants(id);
+        Set<Address> _addresses = customerDAO.getAllAddresses(id);
+        Set<Card> _cards = new HashSet<>(CardService.readCard(id));
+        Map<Food,Integer> _selectedFood = customerDAO.getAllSelectedItems(id);
 
+        StringBuilder profile = new StringBuilder();
+        profile.append("+================================================+\n");
+        profile.append("|               CUSTOMER PROFILE                 |\n");
+        profile.append("+================================================+\n");
+        profile.append(String.format("| Name: %-42s|\n", _name));
+        profile.append(String.format("| Email: %-41s|\n", _email));
+        profile.append(String.format("| Phone: %-41s|\n", _phoneNumber));
+        profile.append(String.format("| Loyalty Points: %-31s|\n", _loyaltyPoints));
+        profile.append("+================================================+\n");
 
-    public void editProfile(Scanner scanner) throws SQLException {
-        System.out.println("All available customer Ids:");
-        System.out.println(customerDAOservices.getAllExistingIds());
-
-        int id = scanner.nextInt();
-        scanner.nextLine();
-        customerDAOservices.displayProfile(id);
-        Customer customer = customerDAOservices.getCustomer(id);
-
-        while(true) {
-            System.out.println("Choose what to edit:\n" +
-                               "1 - name\n" +
-                               "2 - email\n"  +
-                                "3 - phone number\n" +
-                                "4 - password\n" +
-                                " --> ");
-            String choice = scanner.nextLine();
-            switch (choice) {
-                case "1":
-                    System.out.println("New name: ");
-                    String name = scanner.nextLine();
-                    customer.setName(name);
-                    break;
-                case "2":
-                    System.out.println("New email:");
-                    String email = scanner.nextLine();
-                    customer.setEmail(email);
-                    break;
-                case "3":
-                    System.out.println("New phone number:");
-                    String phone = scanner.nextLine();
-                    customer.setPhoneNumber(phone);
-                    break;
-                case "4":
-                    System.out.println("New password: ");
-                    String password = scanner.nextLine();
-                    customer.setPassword(password);
-                    break;
-                case "5":
-                    customerDAOservices.editCustomer(customer);
-                    return; // exit the method
-                default:
-                    System.out.println("Invalid choice, try again.");
-            }
-            customerDAOservices.editCustomer(customer);
+        // Addresses
+        profile.append("| Addresses:                                     |\n");
+        for (Address addr : _addresses) {
+            profile.append(String.format("| - %-44s|\n", addr.toString()));
         }
+
+        // Cards
+        profile.append("+------------------------------------------------+\n");
+        profile.append("| Cards:                                         |\n");
+        for (Card card : _cards) {
+            profile.append(String.format("| - %-44s|\n", card.getGetCardNumber()));
+        }
+
+        // Favourite Restaurants
+        profile.append("+------------------------------------------------+\n");
+        profile.append("| Favourite Restaurants:                         |\n");
+        for (Restaurant res : _favouriteRestaurants) {
+            profile.append(String.format("| - %-44s|\n", res.getName()));
+        }
+
+        // Orders
+        profile.append("+------------------------------------------------+\n");
+        profile.append("| Order History:                                 |\n");
+        for (Order order : _orderHistory) {
+            profile.append(String.format("| - Order #%s : %s\n",order.getDate(),  order.getDeliveryStatus()));
+        }
+
+        // Selected Items
+        profile.append("+------------------------------------------------+\n");
+        profile.append("| Selected Items:                                |\n");
+        for (Map.Entry<Food, Integer> entry : _selectedFood.entrySet()) {
+            profile.append(String.format("| - %-30s x%-10d|\n", entry.getKey().getName(), entry.getValue()));
+        }
+
+        profile.append("+================================================+\n");
+
+        System.out.println(profile.toString());
+    }
+
+    public void editProfile(Scanner scanner)  {
+        try {
+            System.out.println("All available customer Ids:");
+            System.out.println(customerDAOservices.getAllExistingIds());
+
+            int id = scanner.nextInt();
+            scanner.nextLine();
+            displayProfile(id);
+            Customer customer = customerDAOservices.getCustomer(id);
+            boolean exit = false;
+            while (!exit) {
+                System.out.println("Choose what to edit:\n" +
+                        "1 - name\n" +
+                        "2 - email\n" +
+                        "3 - phone number\n" +
+                        "4 - password\n" +
+                        "5 - ↩ Back\n" +
+                        " --> ");
+                String choice = scanner.nextLine();
+                switch (choice) {
+                    case "1":
+                        System.out.println("New name: ");
+                        String name = scanner.nextLine();
+                        customer.setName(name);
+                        break;
+                    case "2":
+                        System.out.println("New email:");
+                        String email = scanner.nextLine();
+                        customer.setEmail(email);
+                        break;
+                    case "3":
+                        System.out.println("New phone number:");
+                        String phone = scanner.nextLine();
+                        customer.setPhoneNumber(phone);
+                        break;
+                    case "4":
+                        System.out.println("New password: ");
+                        String password = scanner.nextLine();
+                        customer.setPassword(password);
+                        break;
+                    case "5":
+                        exit = true;
+                        break;
+                    default:
+                        System.out.println("Invalid choice, try again.");
+                }
+                customerDAOservices.editCustomer(customer);
+            }
+        }catch (Exception e) {e.printStackTrace();}
     }
 
     public void deleteCustomer(Scanner scanner) throws SQLException {
@@ -148,5 +213,42 @@ public class CustomerService {
         System.out.println("All available customer Ids:");
         System.out.println(customerDAOservices.getAllLoyaltyPoints());
     }
+
+    public void AddCustomerCard(Scanner scanner)  {
+        try {
+            System.out.println("All available customer Ids:");
+            System.out.println(customerDAOservices.getAllExistingIds());
+            int id = scanner.nextInt();
+            scanner.nextLine();
+
+            CardService.createCard(scanner,id);
+        }
+        catch (SQLException e) {e.printStackTrace();}
+
+    }
+
+    public void deleteUserCard(Scanner scanner)  {
+        try {
+            System.out.println("All available customer Ids:");
+            System.out.println(customerDAOservices.getAllExistingIds());
+            int id = scanner.nextInt();
+            scanner.nextLine();
+
+            CardService.deleteCard(scanner, id);
+
+        }catch (SQLException e) {e.printStackTrace();}
+    }
+
+    public void modifyUserCard(Scanner scanner)  {
+        try {
+            System.out.println("All available customer Ids:");
+            System.out.println(customerDAOservices.getAllExistingIds());
+            int id = scanner.nextInt();
+            scanner.nextLine();
+
+            CardService.deleteCard(scanner, id);
+        }catch(SQLException e) {e.printStackTrace();}
+    }
+
 
 }
