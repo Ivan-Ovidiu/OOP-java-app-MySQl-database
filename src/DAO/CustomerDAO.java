@@ -194,18 +194,20 @@ public class CustomerDAO extends UserDAO<Customer> {
     }
 
     @Override
-    public void add(Customer customer) throws SQLException{
-        super.add(customer);
+    public void add(Customer customer) {
+       try {
+           super.add(customer);
 
-        // Retrieving the last inserted user ID
-        int userId = getLastUserId();
-        customer.setUserId(userId); // Setting the user ID for the customer
+           // Retrieving the last inserted user ID
+           int userId = getLastUserId();
+           customer.setUserId(userId); // Setting the user ID for the customer
 
-        //insert customer details
-        insertCustomerInfo = c.prepareStatement("INSERT INTO Customers VALUES (?, ?)");
-        insertCustomerInfo.setInt(1, userId);
-        insertCustomerInfo.setDouble(2, customer.getLoyaltyPoints());
-        insertCustomerInfo.executeUpdate();
+           //insert customer details
+           insertCustomerInfo = c.prepareStatement("INSERT INTO Customers VALUES (?, ?)");
+           insertCustomerInfo.setInt(1, userId);
+           insertCustomerInfo.setDouble(2, customer.getLoyaltyPoints());
+           insertCustomerInfo.executeUpdate();
+       }catch (SQLException e) {e.printStackTrace();}
 
     }
 
@@ -228,7 +230,10 @@ public class CustomerDAO extends UserDAO<Customer> {
             deleteCustomer = c.prepareStatement("DELETE FROM addresses WHERE customer_id = ?");
             deleteCustomer.setInt(1, id);
             deleteCustomer.executeUpdate();
+
+
     }
+
 
     public double getAllOrdersPrice (int customer_id) throws SQLException {
        selectPrices = c.prepareStatement("SELECT sum(price) FROM orders WHERE customer_id = ?");

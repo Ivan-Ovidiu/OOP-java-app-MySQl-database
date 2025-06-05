@@ -29,7 +29,7 @@ public class CardDAO extends ConnectionClass {
                 statement = c.prepareStatement("select card_id from Cards order by card_id desc limit 1;");
                 ResultSet rs = statement.executeQuery();
                 if (rs.next())
-                    return rs.getInt(1);
+                    return rs.getInt(1) + 1;
             }
             catch (SQLException e)
             {
@@ -76,6 +76,7 @@ public class CardDAO extends ConnectionClass {
                 e.printStackTrace();
             }
         }
+        AuditDAO.writeAudit("A new card has been added to an user");
     }
 
     public List<Card> getCard(int customer_id){
@@ -102,6 +103,7 @@ public class CardDAO extends ConnectionClass {
                 e.printStackTrace();
             }
         }
+        AuditDAO.writeAudit("Information about a card has been retrieved");
         return null;
     }
 
@@ -122,6 +124,7 @@ public class CardDAO extends ConnectionClass {
                 e.printStackTrace();
             }
         }
+        AuditDAO.writeAudit("Card has been deleted");
     }
 
     public void update(int card_id,Card card){
@@ -147,7 +150,7 @@ public class CardDAO extends ConnectionClass {
                 statement.close();
             } catch (SQLException e) {e.printStackTrace();}
         }
-
+        AuditDAO.writeAudit("Card has been updated");
     }
 
     public void getAllCardIds(int customer_id){

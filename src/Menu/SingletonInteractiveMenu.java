@@ -7,6 +7,7 @@ public class SingletonInteractiveMenu {
 
     private CustomerService customerService;
     private CardService cardService;
+    private RestaurantService restaurantService;
 
     static SingletonInteractiveMenu menu;
 
@@ -18,6 +19,7 @@ public class SingletonInteractiveMenu {
         try {
             customerService = new CustomerService();
             cardService = new CardService();
+            restaurantService = new RestaurantService();
         }catch (Exception e) {e.printStackTrace();}
     }
     public static SingletonInteractiveMenu getInstance()
@@ -74,7 +76,14 @@ public class SingletonInteractiveMenu {
                                 "\n7)Add a new card to a customer" +
                                 "\n8)Delete a card"  +
                                 "\n9)Modify card" +
-                                "\n10)Exit"+
+                                "\n ~Restaurants~" +
+                                "\n10)Delete restaurant " +
+                                "\n11)Update restaurant " +
+                                "\n12)Add restaurant " +
+                                "\n13)Read restaurant " +
+                                "\n#########" +
+                                "\n#14)Exit#"+
+                                "\n#########" +
                                 "\n--->");
 
                         String choice2 = scanner.nextLine();
@@ -106,6 +115,19 @@ public class SingletonInteractiveMenu {
                                 customerService.modifyUserCard(scanner);
                                 break;
                             case "10":
+                                restaurantService.deleteRestaurant(scanner);
+                                break;
+                            case "11":
+                                restaurantService.updateRestaurant(scanner);
+                                break;
+                            case "12":
+                                restaurantService.addRestaurant(scanner);
+                                 break;
+                            case "13":
+                                restaurantService.readRestaurant(scanner);
+                                break;
+
+                            case "14":
                                 exit = true;
                                 break;
 

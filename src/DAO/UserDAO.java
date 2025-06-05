@@ -44,6 +44,7 @@ public class UserDAO<T extends User> implements InterfaceDAO<T> {
             return user;
         }
         else
+            AuditDAO.writeAudit("Informations about user ~" + rs.getString("name") + "~ have been retrieved");
             return null;
 
     }
@@ -74,7 +75,7 @@ public class UserDAO<T extends User> implements InterfaceDAO<T> {
         insertUser.setString(6, user.getUserType());
 
         insertUser.executeUpdate();
-        System.out.println("User added successfully!");
+        AuditDAO.writeAudit("User" + user.getName() + "has been added to the database");
     }
 public boolean verifyUserExistence(String username,String password) throws SQLException {
         selectUserInfo = c.prepareStatement("SELECT password FROM users WHERE name=?");
@@ -103,12 +104,15 @@ public void insertInUser(User user) throws SQLException {
     insertUser.setInt(5, user.getUserId());
     System.out.println(user.getUserId());
     insertUser.executeUpdate();
+    AuditDAO.writeAudit("User" + user.getName() +"has been inserted into the database");
 }
 
 public void delete(int id) throws SQLException {
         deleteUser = c.prepareStatement("DELETE FROM users WHERE user_id=?");
         deleteUser.setInt(1, id);
         deleteUser.executeUpdate();
+        User user = getUserInfo(id);
+        AuditDAO.writeAudit("User " + user.getName() + "has been deleted from the database");
 }
 
 

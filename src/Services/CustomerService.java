@@ -1,4 +1,5 @@
 package Services;
+import DAO.AuditDAO;
 import DAO.CustomerDAO;
 import DAO.UserDAO;
 import DAOServices.CustomerDAOServices;
@@ -39,6 +40,7 @@ public class CustomerService {
         customer.setPassword(password);
         customer.setPhoneNumber(phone);
         customerDAOservices.createCustomer(customer);
+        AuditDAO.writeAudit("A new customer has been created");
     }
 
     public boolean loginUser(Scanner scanner) throws SQLException {
@@ -49,6 +51,7 @@ public class CustomerService {
 
         if(customerDAOservices.loginChecker(username,password)) {
             System.out.println("Login Successful");
+            AuditDAO.writeAudit("A customer has logged in");
             return true;
         }
         else {
@@ -115,6 +118,7 @@ public class CustomerService {
         profile.append("+================================================+\n");
 
         System.out.println(profile.toString());
+        AuditDAO.writeAudit("The profile of an user has been displayed");
     }
 
     public void editProfile(Scanner scanner)  {
@@ -189,6 +193,8 @@ public class CustomerService {
         for (Map.Entry<Food, Integer> entry : sortedFood) {
             System.out.println(entry.getKey().getName() + " => " + entry.getValue());
         }
+
+        AuditDAO.writeAudit("The food list has been retrieved ordered by price");
     }
 
     public void displayAllOrderCost(Scanner scanner) throws SQLException {
@@ -198,6 +204,7 @@ public class CustomerService {
         int id = scanner.nextInt();
         scanner.nextLine();
         System.out.println(customerDAOservices.allOrderPrices(id));
+        AuditDAO.writeAudit("The cost for every order of a customer has been retrieved");
     }
 
     public void displayAllFavouriteRestaurants(Scanner scanner) throws SQLException {
@@ -207,11 +214,13 @@ public class CustomerService {
         int id = scanner.nextInt();
         scanner.nextLine();
         System.out.println(customerDAOservices.getAllFavouriteRestaurants(id));
+        AuditDAO.writeAudit("The favourite restaurants of an user has been retrieved");
     }
 
     public void displayAllLoyaltyPoints() throws SQLException {
         System.out.println("All available customer Ids:");
         System.out.println(customerDAOservices.getAllLoyaltyPoints());
+        AuditDAO.writeAudit("The loyalty points of al users has been retrieved");
     }
 
     public void AddCustomerCard(Scanner scanner)  {
